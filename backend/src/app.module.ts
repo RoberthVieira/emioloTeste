@@ -3,13 +3,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { InferenceModule } from './inference/inference.module';
 
 @Module({
   imports: [
-    //Lê o .env
+    InferenceModule,
+
+    //ConfigModule lê as variáveis de ambiente do arquivo .env
+    // `isGlobal: true` faz com que de para usar o ConfigService em qualquer módulo sem precisar importar novamente
     ConfigModule.forRoot({ isGlobal: true }),
 
-    //Conecta com o MongoDB
+    //MongooseModule conecta o NestJS ao MongoDB de forma assíncrona
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -18,8 +22,9 @@ import { AppService } from './app.service';
         if (!uri) throw new Error('MONGO_URI não definido no .env');
 
         return { uri };
-      },
+      }
     }),
+
   ],
   controllers: [AppController],
   providers: [AppService],
