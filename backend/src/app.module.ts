@@ -4,10 +4,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InferenceModule } from './inference/inference.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
     InferenceModule,
+    EventsModule,
 
     //ConfigModule lê as variáveis de ambiente do arquivo .env
     // `isGlobal: true` faz com que de para usar o ConfigService em qualquer módulo sem precisar importar novamente

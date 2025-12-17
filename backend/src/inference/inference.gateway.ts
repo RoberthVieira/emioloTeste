@@ -5,10 +5,15 @@ import {
     ConnectedSocket
 } from "@nestjs/websockets";
 import { Socket } from "socket.io";
+import { EventsService } from "../events/events.service";
 
 
 @WebSocketGateway({cors: true})
 export class InferenceGateway {
+
+    constructor(
+        private readonly eventService: EventsService,
+    ) {}
 
     handleConnection(client: Socket) {
         const token = client.handshake.auth?.token;
@@ -26,15 +31,25 @@ export class InferenceGateway {
         const {requestId} = data;
 
         const interval = setInterval(() => {
+
+            const confidence = Math.random();
+
             client.emit('inference-result', {
                 requestId,
                 status: 'processing',
                 inference: {
                     label: 'mock',
-                    confidence: Math.random(),
+                    confidence,
                 },
                 timestamp: Date.now(),
             });
+
+            this.eventService.saveEvent({
+                requestId,
+                label: 'mock',
+                confidence,
+            });
+
         }, 500)
 
         client.on('disconnect', () => {
