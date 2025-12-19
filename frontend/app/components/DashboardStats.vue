@@ -2,14 +2,17 @@
     <section class="dashboard">
         <h2>Estatísticas</h2>
 
-        <div class="stats-grid">
+        <p v-if="pending">Carregando métricas...</p>
+        <p v-else-if="error">Erro ao carregar métricas</p>
+
+        <div v-else class="stats-grid">
             <div class="stat-card">
                 <span class="label">Eventos processados</span>
                 <strong>{{ stats.totalEvents }}</strong>
             </div>
 
             <div class="stat-card high">
-                <span class="label">Risco alto</span>
+                <span class="label">Taxa de erro</span>
                 <strong>{{ stats.highRiskPercentage }}%</strong>
             </div>
 
@@ -27,33 +30,37 @@
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted } from 'vue'
+    import { computed } from 'vue';
 
     type DashboardStats = {
-        totalEvents: number
-        highRiskPercentage: number
-        topEmotion: string
-        avgLatency: number
-    }
+        eventsProcessed: number
+        averageLatencyMs: number
+        errorRate: number
+    };
 
-    const stats = ref<DashboardStats>({
-        totalEvents: 0,
-        highRiskPercentage: 0,
-        topEmotion: '-',
-        avgLatency: 0
+    const { data, pending, error } = useFetch<DashboardStats>(
+        'http://localhost:3000/health/metrics'
+    );
+
+    const stats = computed(() => {
+        if (!data.value) {
+            return {
+                totalEvents: 0,
+                highRiskPercentage: 0,
+                topEmotion: '-',
+                avgLatency: 0
+            }
+        }
+
+        return {
+            totalEvents: data.value.eventsProcessed,
+            highRiskPercentage: Math.round(data.value.errorRate * 100),
+            topEmotion: '-',
+            avgLatency: data.value.averageLatencyMs
+        }
     })
 
-    /**
-     * MOCK — depois você troca por fetch('/health/metrics')
-     */
-    onMounted(() => {
-    stats.value = {
-        totalEvents: 128,
-        highRiskPercentage: 34,
-        topEmotion: 'happy',
-        avgLatency: 14
-    }
-})
+
 </script>
 
 <style scoped>

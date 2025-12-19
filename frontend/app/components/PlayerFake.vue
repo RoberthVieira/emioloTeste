@@ -1,12 +1,11 @@
 <template>
   <section class="player">
-    <!-- Video + overlay -->
+
     <div class="video-wrapper">
       <div class="video-placeholder">
         <span>Stream simulado</span>
       </div>
 
-      <!-- Bounding box overlay -->
       <div
         v-if="bbox"
         class="bbox"
@@ -18,7 +17,6 @@
       </div>
     </div>
 
-    <!-- Info panel -->
     <div class="info">
       <p>
         <strong>Conexão:</strong>
