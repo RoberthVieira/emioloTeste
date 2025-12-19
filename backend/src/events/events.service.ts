@@ -8,13 +8,16 @@ import { Event } from "./events.schema";
 export class EventsService {
     constructor(
         @InjectModel(Event.name)  //Conecta esse service à coleção events do MongoDB
-        private readonly eventModel:  Model<Event>
-    ) {}
+        private readonly eventModel: Model<Event>
+    ) { }
 
     async saveEvent(data: {
         requestId: string;
+        frameId: string;
         label: string;
         confidence: number;
+        riskLevel: 'LOW' | 'MEDIUM' | 'HIGH';
+        timestamp: Date;
     }) {
         return this.eventModel.create(data);
     }
@@ -22,9 +25,9 @@ export class EventsService {
     async countByLabel() {
         return this.eventModel.aggregate([
             {
-                $group:{
+                $group: {
                     _id: '$label',
-                    total: {$sum: 1}
+                    total: { $sum: 1 }
                 },
             },
         ]);

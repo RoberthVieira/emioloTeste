@@ -1,7 +1,26 @@
+export interface InferenceResult {
+    emotions: {
+        label: string;
+        score: number;
+    }[];
+
+    ppe: {
+        class: string;
+        score: number;
+        bbox: number[];
+    }[];
+
+    risk: {
+        level: 'LOW' | 'MEDIUM' | 'HIGH';
+        score: number;
+        reasons: string[];
+    };
+
+    latency_ms: number;
+}
+
 export interface InferenceProvider {
     name: string;
 
-    // Método responsável por executar a inferência
-    // A implementação concreta será feita futuramente
-    infer(input: unknown): Promise<unknown>
+    infer(input: unknown, requestId: string): Promise<InferenceResult>;
 }

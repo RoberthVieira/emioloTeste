@@ -1,18 +1,27 @@
-import { InferenceProvider } from "../interfaces/inference-provider.interface";
+import { InferenceProvider, InferenceResult } from "../interfaces/inference-provider.interface";
 
-//Implementação fake usada apenas para testes e desenvolvimento inicial
-export class MockInferenceProvider implements InferenceProvider{
+// Implementação fake usada apenas para testes e desenvolvimento inicial
+export class MockInferenceProvider implements InferenceProvider {
 
     name = 'mock-provider';
 
-    async infer(input: unknown): Promise<unknown> {
-        return{
-            status: 'sucsses',
-            inference: {
-                label: 'mock-result',
-                confidence: 0.99
+    async infer(_: unknown, requestId: string): Promise<InferenceResult> {
+        return {
+            emotions: [
+                { label: 'happy', score: 0.83 }
+            ],
+
+            ppe: [
+                { class: 'helmet', score: 0.91, bbox: [12, 30, 120, 160] }
+            ],
+
+            risk: {
+                level: 'HIGH',
+                score: 0.85,
+                reasons: ['no-helmet', 'anger']
             },
-            receivedFrames: input
-        }
+
+            latency_ms: 14
+        };
     }
 }

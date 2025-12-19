@@ -6,11 +6,10 @@ import { INFERENCE_PROVIDER } from './inference.constants';
 export class InferenceService {
   constructor(
     @Inject(INFERENCE_PROVIDER)
-    private readonly inferenceProvider: InferenceProvider, 
-  ) {}
+    private readonly inferenceProvider: InferenceProvider,
+  ) { }
 
-  async processFrames(frames: string[]){
-    // Aqui o service não sabe SE é mock ou real
-    return this.inferenceProvider.infer(frames);
+  async processFrames(frames: string[], requestId: string) {
+    return this.inferenceProvider.infer(frames, requestId);
   }
 }
