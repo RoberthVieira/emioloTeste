@@ -1,6 +1,7 @@
 <script setup>
     import PlayerFake from '~/components/PlayerFake.vue';
     import ListaEventos from '~/components/ListaEventos.vue';
+    import DashboardStats from '~/components/DashboardStats.vue';
 </script>
 
 <template>
@@ -10,6 +11,8 @@
         <p class="subtitle">
             Simulação de processamento de IA com eventos em tempo real
         </p>
+
+        <DashboardStats />
 
         <section class="content">
             <PlayerFake />

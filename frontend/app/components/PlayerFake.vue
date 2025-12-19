@@ -1,116 +1,168 @@
 <template>
-    <section class="player">
-        <!-- Área que simula o vídeo -->
-        <div class="video-placeholder">
-            <span>Stream simulado</span>
-        </div>
+  <section class="player">
+    <!-- Video + overlay -->
+    <div class="video-wrapper">
+      <div class="video-placeholder">
+        <span>Stream simulado</span>
+      </div>
 
-        <div class="info">
-            <p>
-                <strong>Status:</strong>
-                <span class="status">{{ status }}</span>
-            </p>
+      <!-- Bounding box overlay -->
+      <div
+        v-if="bbox"
+        class="bbox"
+        :style="bboxStyle"
+      >
+        <span class="badge">
+          {{ label }} • {{ riskLevel }}
+        </span>
+      </div>
+    </div>
 
-            <p>
-                <strong>Risco estimado:</strong>
-                <span class="risk">{{ riscoEstimado }}</span>
-            </p>
+    <!-- Info panel -->
+    <div class="info">
+      <p>
+        <strong>Conexão:</strong>
+        <span :class="connectionStatus">{{ connectionStatus }}</span>
+      </p>
 
-            <p>
-                <strong>Confiança:</strong>
-                <span class="confidence">
-                    {{ confidence !== null ? confidence.toFixed(2) : '-' }}
-                </span>
-            </p>
-        </div>
-    </section>
+      <p>
+        <strong>Status:</strong>
+        {{ status }}
+      </p>
+
+      <p>
+        <strong>Confiança:</strong>
+        {{ confidence !== null ? confidence.toFixed(2) : '-' }}
+      </p>
+    </div>
+  </section>
 </template>
 
 <script setup lang="ts">
-    import { ref, onMounted, onUnmounted, computed } from 'vue';
+    import { ref, computed, onMounted, onUnmounted } from 'vue';
     import { useSocket } from '~/service/socket';
 
-    const status = ref('Aguardando');
-    const confidence = ref<number | null>(null);
-    const label = ref<string | null>(null);
+    type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH';
 
     const socket = useSocket();
     const requestId = crypto.randomUUID();
 
-    const riscoEstimado = computed(() => {
-        if(label.value) return '-';
+    const status = ref('Aguardando');
+    const confidence = ref<number | null>(null);
+    const label = ref<string>('—');
+    const riskLevel = ref<RiskLevel>('LOW');
+    const connectionStatus = ref<'loading' | 'connected' | 'error'>('loading');
 
-        if(label.value === 'violencia') return 'Alto';
-        if(label.value === 'suspeito') return 'Médio';
+    const bbox = ref<[number, number, number, number] | null>(null);
 
-        return 'Baixo';
-    })
+    const bboxStyle = computed(() => {
+        if (!bbox.value) return {};
+        const [x, y, w, h] = bbox.value;
+
+        return {
+            left: `${x}%`,
+            top: `${y}%`,
+            width: `${w}%`,
+            height: `${h}%`
+        };
+    });
 
     onMounted(() => {
+        socket.on('connect', () => {
+            connectionStatus.value = 'connected';
+        });
+
+        socket.on('disconnect', () => {
+            connectionStatus.value = 'error';
+        });
+
         socket.emit('start-inference', { requestId });
 
         socket.on('inference-result', (data) => {
-            if(data.requestId !== requestId) return;
+            if (data.requestId !== requestId) return;
 
             status.value = data.status;
             confidence.value = data.inference.confidence;
             label.value = data.inference.label;
+            riskLevel.value = data.riskLevel ?? 'LOW';
+
+            bbox.value = data.inference.bbox ?? [20, 20, 30, 30];
         });
     });
 
     onUnmounted(() => {
         socket.off('inference-result');
-    })
+        socket.off('connect');
+        socket.off('disconnect');
+    });
 </script>
 
 <style scoped>
-    .player{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
+.player {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 
-    /* Área do "video" */
-    .video-placeholder{
-        background: #111;
-        color: #fff;
-        height: 220px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        font-size: 1rem;
-    }
+.video-wrapper {
+    position: relative;
+}
 
-    /* Bloco de informações */
-    .info{
-        background: #f5f5f5;
-        padding: 1rem;
-        border-radius: 8px;
-    }
+.video-placeholder {
+    background: #111;
+    color: #fff;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
 
-    .info p{
-        margin: 0.3rem;
-        font-size: 0.95rem;
-    }
+.bbox {
+    position: absolute;
+    border: 2px solid #dc2626;
+    box-sizing: border-box;
+}
 
-    .status{
-        color: #d97706;
-    }
+.badge {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    background: #dc2626;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
 
-    .risk{
-        color: #dc2626;
-        font-weight: bold;
-    }
+.info {
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 8px;
+}
 
-    .confidence {
-        font-family: monospace;
-    }
+.info p {
+    margin: 0.3rem 0;
+    font-size: 0.95rem;
+}
 
-    /* Responsivo */
-    @media (min-width: 768px){
-        .video-placeholder{
-            height: 300px;
-        }
+.connected {
+    color: #16a34a;
+}
+
+.loading {
+    color: #d97706;
+}
+
+.error {
+    color: #dc2626;
+}
+
+/* Responsivo */
+@media (min-width: 768px) {
+    .video-placeholder {
+        height: 320px;
     }
+}
 </style>
