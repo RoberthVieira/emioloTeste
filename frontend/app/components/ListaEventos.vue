@@ -21,31 +21,43 @@
     </section>
 </template>
 
-<script setup>
-/**
- * Dados mockados apenas para visualização.
- * Depois isso virá do backend via WebSocket.
- */
-const eventos = [
-  {
-    id: 1,
-    label: 'mock',
-    confidence: 0.83,
-    timestamp: '10:21:34'
-  },
-  {
-    id: 2,
-    label: 'mock',
-    confidence: 0.91,
-    timestamp: '10:21:36'
-  },
-  {
-    id: 3,
-    label: 'mock',
-    confidence: 0.77,
-    timestamp: '10:21:38'
-  }
-]
+<script setup lang="ts">
+    import { ref, onMounted, onUnmounted } from 'vue';
+    import { useSocket } from '~/service/socket';
+
+    type Evento = {
+        id: string
+        label: string
+        confidence: number
+        timestamp: string
+    }
+
+    const eventos = ref<Evento[]>([]);
+
+    const socket = useSocket();
+
+    onMounted(() => {
+        socket.on('inference-result', (data) => {
+            const novoEvento: Evento = {
+                id: crypto.randomUUID(),
+                label: data.inference.label,
+                confidence: data.inference.confidence,
+                timestamp: new Date(data.timestamp).toLocaleTimeString()
+            }
+
+            //adiciona ao topo da lista
+            eventos.value.unshift(novoEvento);
+
+            //mantem os ultimos 10 eventos
+            if(eventos.value.length > 10){
+                eventos.value.pop();
+            }
+        })
+    })
+
+    onUnmounted(() => {
+        socket.off('inference-result')
+    })
 </script>
 
 <style scoped>

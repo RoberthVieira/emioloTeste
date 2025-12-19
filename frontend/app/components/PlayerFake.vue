@@ -8,21 +8,60 @@
         <div class="info">
             <p>
                 <strong>Status:</strong>
-                <span class="status">Processando</span>
+                <span class="status">{{ status }}</span>
             </p>
 
             <p>
                 <strong>Risco estimado:</strong>
-                <span class="risk">Alto</span>
+                <span class="risk">{{ riscoEstimado }}</span>
             </p>
 
             <p>
                 <strong>Confiança:</strong>
-                <span class="confidence">0.87</span>
+                <span class="confidence">
+                    {{ confidence !== null ? confidence.toFixed(2) : '-' }}
+                </span>
             </p>
         </div>
     </section>
 </template>
+
+<script setup lang="ts">
+    import { ref, onMounted, onUnmounted, computed } from 'vue';
+    import { useSocket } from '~/service/socket';
+
+    const status = ref('Aguardando');
+    const confidence = ref<number | null>(null);
+    const label = ref<string | null>(null);
+
+    const socket = useSocket();
+    const requestId = crypto.randomUUID();
+
+    const riscoEstimado = computed(() => {
+        if(label.value) return '-';
+
+        if(label.value === 'violencia') return 'Alto';
+        if(label.value === 'suspeito') return 'Médio';
+
+        return 'Baixo';
+    })
+
+    onMounted(() => {
+        socket.emit('start-inference', { requestId });
+
+        socket.on('inference-result', (data) => {
+            if(data.requestId !== requestId) return;
+
+            status.value = data.status;
+            confidence.value = data.inference.confidence;
+            label.value = data.inference.label;
+        });
+    });
+
+    onUnmounted(() => {
+        socket.off('inference-result');
+    })
+</script>
 
 <style scoped>
     .player{
