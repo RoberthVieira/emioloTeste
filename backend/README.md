@@ -1,98 +1,150 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend — Teste Técnico Full Stack (eMiolo.com)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este é o backend do teste técnico da eMiolo.com, implementado com NestJS e MongoDB.
+Ele simula um sistema de inferência de Inteligência Artificial em tempo real, com integração REST + WebSockets, persistência em banco e observabilidade básica.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Stack Tecnológica
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Framework:** NestJS
+- **Linguagem:** TypeScript / Node
+- **Banco de Dados:** MongoDB Atlas (via Mongoose)
+- **Comunicação Real-time:** WebSockets (Socket.io)
+- **Autenticação (WebSocket):** WebSockets (Socket.io)
+- **Observabilidade:** Endpoint /health/metrics para métricas do sistema
 
-## Project setup
+---
 
-```bash
-$ npm install
+## Estrutura do Projeto
+
+```
+src/
+├── app.module.ts                 # Módulo principal
+├── main.ts                       # Inicialização do servidor
+├── events/                      # Persistência e serviços de eventos de inferência
+│   ├── events.schema.ts
+│   ├── events.service.ts
+│   └── events.module.ts
+├── inference/                  # Inferência (Provider Pattern + Controller + Gateway)
+│   ├── inference.constants.ts
+│   ├── inference.controller.ts
+│   ├── inference.service.ts
+│   ├── inference.module.ts
+|   ├── inference.getway.ts
+│   ├── providers/
+│   │   └── mock-inference.provider.ts
+│   └── interfaces/
+│       └── inference-provider.interface.ts
+├── health/                     # Observabilidade
+│   ├── health.controller.ts
+│   ├── metrics.service.ts
+│   └── health.module.ts
+└── ...                          # Outras dependências (config, providers, etc.)
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ npm run start
+## Como Rodar
 
-# watch mode
-$ npm run start:dev
+### Pré-requisito
+- Node.js (>= 18)
+- NPM ou Yarn
+- MongoDB rodando localmente ou via Atlas
+- Se estiver usando MongoDB Atlas coloque o URI no arquivo .env 
 
-# production mode
-$ npm run start:prod
+```
+Clone o repositório:
+git clone https://github.com/RoberthVieira/emioloTeste.git
+
+Instale as dependências:
+npm install
+
+Execute o servidor de desenvolvimento:
+npm run dev
+
+Acesse em:
+http://localhost:3000
+
 ```
 
-## Run tests
+--- 
 
-```bash
-# unit tests
-$ npm run test
+## Endpoints Disponiveis
 
-# e2e tests
-$ npm run test:e2e
+### POST /inference/frames
+Recebe um array de frames e retorna simulação de resultados de inferencia:
 
-# test coverage
-$ npm run test:cov
+```
+POST /inference/frames
+{
+  "frames": ["...","..."]
+}
 ```
 
-## Deployment
+Retorno de exemplo:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```
+{
+  "emotions": [...],
+  "ppe": [...],
+  "risk": {...},
+  "latency_ms": 14
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
 
-## Resources
+## WebSockets - streaming em tempo real
 
-Check out a few resources that may come in handy when working with NestJS:
+### Endereço:
+```
+ws://localhost:3000
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Eventos disparados pelo cliente:
+```
+start-inference {resquestId}
+```
 
-## Support
+###Resposta enviada pelo servidor a cada 500ms:
+```
+{
+  "ts": "...",
+  "frameId": "...",
+  "overlay": {"boxes": [...], "emotions": [...], "risk": {...} }
+}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Get/health/metrics
 
-## Stay in touch
+### Retorna métricas simples do sistema:
+```
+GET /health/metrics
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Exemplo de retorno:
+```
+"eventsProcessed": 10,
+"averageLatencyMs": 14,
+"errorRate": 0.0,
+"uptimeSeconds": 123
+```
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Observabilidade
+
+O endpoint /health/metrics foi criado para demonstrar observabilidade simples:
+- total de eventos processados
+- Latência média
+- Taxa de erro
+- Tempo de uptime 
+
+---
+
+## Padrões Arquiteturais
+
+### Provider Pattern
+O módulo de inferência foi construído com o padrão Provider Pattern, permitindo facilmente substituir:
+- MockProvider(atual)
+- LLMProvider (futura integração com modelo de IA)
