@@ -1,75 +1,66 @@
-# Nuxt Minimal Starter
+# Frontend - Teste Técnico Full Stack (eMiolo.com)
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Este diretório contém a interface do usuário desenvolvida com Nuxt 3 para o teste técnico da eMiolo.com. A aplicação foca na visualização de dados de inteligência artificial em tempo real, integrando análise emocional e monitoramento de risco.
 
-## Setup
+---
 
-Make sure to install dependencies:
+## Stack Tecnológica
 
-```bash
-# npm
+- **Framework:** Nuxt 3 (Vue.js)
+- **Linguagem:** TypeScript
+- **Comunicação Real-time:** WebSockets (Socket.io) para o stream de inferências.
+
+---
+
+## Funcionalidades Implementadas
+
+- **Monitor de Inferência (Player Simulado):** Renderização de bounding boxes e badges de risco sobre um placeholder de vídeo, atualizados dinamicamente via socket.
+
+- **Gestão de Conexão:** Indicadores de estado (Conectado, Carregando, Erro) integrados ao ciclo de vida do Socket.io.
+
+- **Feed de Eventos Recentes:** Listagem reativa que organiza as últimas detecções por nível de risco e confiança.
+
+- **Dashboard de Métricas:** Visualização de dados de observabilidade, como total de eventos processados e latência média.
+
+---
+
+## Estrutura de Arquivos
+
+- **app/pages/index.vue**: Layout principal que organiza os módulos de estatísticas, player e lista de eventos.
+
+- **app/components/PlayerFake.vue**: Lógica de conexão WebSocket e cálculo de posicionamento das caixas de detecção (bbox).
+
+- **app/components/ListaEventos.vue**: Gerenciamento do histórico de eventos recebidos em tempo real.
+
+- **app/components/DashboardStats.vue**: Interface para exibição dos dados de saúde e performance do sistema.
+
+---
+
+## Como executar o projeto
+
+```
+
+Clone o repositório:
+git clone https://github.com/RoberthVieira/emioloTeste.git
+
+Instale as dependências:
 npm install
 
-# pnpm
-pnpm install
+Execute o servidor de desenvolvimento:
+npx nuxi dev --port 3001
 
-# yarn
-yarn install
+Acesse em:
+http://localhost:3001
 
-# bun
-bun install
 ```
+---
 
-## Development Server
+### Diferenciais Técnicos Aplicados
 
-Start the development server on `http://localhost:3000`:
+- Uso de requestId único gerado no frontend para rastrear as sessões de inferência.
+- **Limitação de Memória**: O feed de eventos é programado para manter apenas os últimos 10     itens, evitando sobrecarga do navegador durante transmissões longas.
 
-```bash
-# npm
-npm run dev
+---
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Preview
+![Preview da Aplicação](./public/preview-teste.png)
