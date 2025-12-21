@@ -138,7 +138,8 @@ Por ultimo caso a nova implementação apresente qualquer instabilidade, o siste
 
 ## 9. Limitações e Melhorias Futuras
 
-**Limitação:** O player de vídeo e as inferências são simulações visuais para este teste.
+**Limitação 1:** O OAuth2, listagem de usuários e consumo de API (SWAPI) foi mapeado como melhoria prioritária para uma próxima sprint.
+**Limitação 2:** O player de vídeo e as inferências são simulações visuais para este teste.
 
 - Melhoria 1: Integração com um provedor real de IA (ex: TensorFlow.js ou Azure Cognitive Services).
 - Melhoria 2: Implementação de autenticação completa (OAuth2/Google).
