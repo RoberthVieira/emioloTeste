@@ -6,16 +6,17 @@ import { AppService } from './app.service';
 import { InferenceModule } from './inference/inference.module';
 import { EventsModule } from './events/events.module';
 import { HealthModule } from './health/health.module';
+import { AuthModule } from './auth/auth.module';
+import { join } from 'path';
 
 @Module({
   imports: [
-    InferenceModule,
-    EventsModule,
-    HealthModule,
-
     //ConfigModule lê as variáveis de ambiente do arquivo .env
     // `isGlobal: true` faz com que de para usar o ConfigService em qualquer módulo sem precisar importar novamente
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ 
+        isGlobal: true,
+        envFilePath: join(process.cwd(), '.env'),
+    }),
 
     //MongooseModule conecta o NestJS ao MongoDB de forma assíncrona
     MongooseModule.forRootAsync({
@@ -28,6 +29,11 @@ import { HealthModule } from './health/health.module';
         return { uri };
       }
     }),
+
+    InferenceModule,
+    EventsModule,
+    HealthModule,
+    AuthModule,
 
   ],
   controllers: [AppController],
