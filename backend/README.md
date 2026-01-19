@@ -61,7 +61,7 @@ Instale as dependências:
 npm install
 
 Execute o servidor de desenvolvimento:
-npm run dev
+npm run start:dev
 
 Acesse em:
 http://localhost:3000

@@ -1,66 +1,101 @@
-<script setup>
-    import PlayerFake from '~/components/PlayerFake.vue';
-    import ListaEventos from '~/components/ListaEventos.vue';
-    import DashboardStats from '~/components/DashboardStats.vue';
-</script>
-
 <template>
-    <main class="container">
-        <h1>Inferência em Tempo Real</h1>
+    <main class="login-page">
+        <section class="login-card">
+            <div class="header">
+                <h1>Bem-vindo</h1>
+                <p>Faça login para continuar</p>
+            </div>
 
-        <p class="subtitle">
-            Simulação de processamento de IA com eventos em tempo real
-        </p>
+            <button class="google-btn" @click="loginWithGoogle">
+            <img
+                src="https://developers.google.com/identity/images/g-logo.png"
+                alt="Google"
+            />
+                Entrar com Google
+            </button>
 
-        <DashboardStats />
-
-        <section class="content">
-            <PlayerFake />
-            <ListaEventos />
+            <small class="info">
+                Usamos sua conta Google apenas para autenticação.
+            </small>
         </section>
     </main>
 </template>
 
-<style scoped>
-    .container{
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 1.5rem;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+<script setup>
+
+    const loginWithGoogle = () => {
+        window.location.href = 'http://localhost:3000/auth/google'
+    };
+
+</script>
+
+<style>
+    .login-page {
+        font-family: sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        background: linear-gradient(135deg, #eef2ff, #f9fafb);
     }
 
-    h1{
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        text-align: center;
     }
 
-    .subtitle{
+    .header h1 {
+        font-size: 1.6rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .header p {
+        font-size: 0.95rem;
         color: #555;
         margin-bottom: 2rem;
-        font-size: 1rem;
     }
 
-    .content{
+    .google-btn {
+        width: 100%;
         display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background: #fff;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
 
-    /* Mobile */
-    @media (max-width: 600px){
-        h1{
-            font-size: 1.6rem;
-        }
-
-        .container{
-            padding: 1rem;
-        }
+    .google-btn:hover {
+        background: #f5f5f5;
     }
 
-    /* Telas grandes */
-    @media (min-width: 1024px) {
-        .content{
-            gap: 2rem;
+    .google-btn img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .info {
+        display: block;
+        margin-top: 1.5rem;
+        font-size: 0.75rem;
+        color: #777;
+    }
+
+    @media (min-width: 768px) {
+        .login-card {
+            padding: 2.5rem;
         }
     }
 </style>

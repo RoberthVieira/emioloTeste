@@ -1,5 +1,6 @@
-import { Controller, Get, UseGuards, Req } from "@nestjs/common";
+import { Controller, Get, UseGuards, Req, Res } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
+import type { Response } from "express";
 
 @Controller('auth')
 export class AuthController {
@@ -12,15 +13,12 @@ export class AuthController {
     
     @Get('google/callback')
     @UseGuards(AuthGuard('google'))
-    googleAuthRedirect(@Req() req) {
-        return {
-            message: 'Usuário autenticado com sucesso',
-            user: req.user,
-        };
-    }
-
-    @Get('me')
-    me(@Req() req){
-        return req.user;
+    googleAuthRedirect(@Req() req, @Res() res: Response) {
+        const user = req.user;
+    
+        const name = encodeURIComponent(user.name);
+        const email = encodeURIComponent(user.email);
+        
+        return res.redirect(`http://localhost:3001/home?name=${name}&email=${email}`);
     }
 }
