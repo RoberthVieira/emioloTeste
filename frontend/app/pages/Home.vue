@@ -39,6 +39,7 @@
             <NuxtLink to="/users">👥 Usuários</NuxtLink>
             <NuxtLink to="/swapi/people">🌌 Star Wars</NuxtLink>
             <NuxtLink to="/swapi/planets">🪐 Planets</NuxtLink>
+            <NuxtLink to="/dashboard">Inferência em Tempo Real</NuxtLink>
         </nav>
     </main>
 </template>
