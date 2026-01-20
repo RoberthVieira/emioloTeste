@@ -1,3 +1,11 @@
+<script setup>
+
+    const loginWithGoogle = () => {
+        window.location.href = 'http://localhost:3000/auth/google'
+    };
+
+</script>
+
 <template>
     <main class="login-page">
         <section class="login-card">
@@ -20,14 +28,6 @@
         </section>
     </main>
 </template>
-
-<script setup>
-
-    const loginWithGoogle = () => {
-        window.location.href = 'http://localhost:3000/auth/google'
-    };
-
-</script>
 
 <style>
     .login-page {

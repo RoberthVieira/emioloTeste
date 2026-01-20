@@ -1,3 +1,13 @@
+<script setup lang="ts">
+    defineProps<{
+        user: {
+            name: string
+            email: string
+            avatar?: string
+        }
+    }>()
+</script>
+
 <template>
     <div class="user-card">
         <img
@@ -13,16 +23,6 @@
         </div>
   </div>
 </template>
-
-<script setup lang="ts">
-    defineProps<{
-        user: {
-            name: string
-            email: string
-            avatar?: string
-        }
-    }>()
-</script>
 
 <style scoped>
     .user-card {

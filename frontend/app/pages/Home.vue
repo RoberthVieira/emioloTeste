@@ -38,7 +38,7 @@
         <nav class="menu">
             <NuxtLink to="/users">👥 Usuários</NuxtLink>
             <NuxtLink to="/swapi/people">🌌 Star Wars</NuxtLink>
-            <NuxtLink to="/dashboard">📊 Dashboard</NuxtLink>
+            <NuxtLink to="/swapi/planets">🪐 Planets</NuxtLink>
         </nav>
     </main>
 </template>

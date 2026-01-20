@@ -1,3 +1,23 @@
+<script setup lang="ts">
+    import { computed } from 'vue'
+    import UserCard from '~/components/UserCard.vue'
+    import BackButton from '~/components/BackButton.vue'
+
+    type User = {
+        _id: string
+        name: string
+        email: string
+        avatar?: string
+    }
+
+    const { data, pending, error } = useFetch<User[]>(
+        'http://localhost:3000/users',
+        { credentials: 'include', server: false}
+    )   
+
+    const users = computed(() => data.value ?? [])
+</script>
+
 <template>
     <main class="users-page">
         <h1>Usuários cadastrados</h1>
@@ -16,27 +36,10 @@
                 }"
             />
         </div>
+
+        <BackButton></BackButton>
     </main>
 </template>
-
-<script setup lang="ts">
-    import { computed } from 'vue'
-    import UserCard from '~/components/UserCard.vue'
-
-    type User = {
-        _id: string
-        name: string
-        email: string
-        avatar?: string
-    }
-
-    const { data, pending, error } = useFetch<User[]>(
-        'http://localhost:3000/users',
-        { credentials: 'include', server: false}
-    )   
-
-    const users = computed(() => data.value ?? [])
-</script>
 
 <style scoped>
     .users-page {
@@ -52,6 +55,7 @@
     .list {
         display: grid;
         gap: 0.75rem;
+        margin-bottom: 15px;
     }
 
     /* Desktop */
