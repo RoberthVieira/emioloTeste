@@ -5,10 +5,17 @@ export class MetricsServices {
     private processedEvents = 0;
     private errorCount = 0;
     private latencies: number[] = [];
+    private highRiskEvents = 0;
+    private mediumRiskEvents = 0; 
+    private lowRiskEvents = 0;
 
-    recordEvent(latencyMs: number) {
+    recordEvent(latencyMs: number, riskLevel: 'LOW' | 'MEDIUM' | 'HIGH') {
         this.processedEvents++;
         this.latencies.push(latencyMs);
+
+        if (riskLevel === 'HIGH') this.highRiskEvents++;
+        else if (riskLevel === 'MEDIUM') this.mediumRiskEvents++;
+        else this.lowRiskEvents++;
     }
 
     recordError() {
@@ -33,6 +40,9 @@ export class MetricsServices {
                     (this.errorCount / this.processedEvents).toFixed(3)
                 )
             : 0,
+            highRiskEvents: this.highRiskEvents,
+            mediumRiskEvents: this.mediumRiskEvents,
+            lowRiskEvents: this.lowRiskEvents,
             uptimeSeconds: Math.floor(process.uptime()),
         };
     }

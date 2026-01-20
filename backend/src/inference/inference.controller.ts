@@ -1,4 +1,6 @@
-import { Controller, Post, Body } from "@nestjs/common";
+import { Controller, Post, Body, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+
 import { InferenceService } from "./inference.service";
 import { randomUUID } from "crypto";
 
@@ -8,6 +10,7 @@ export class InferenceController {
         private readonly inferenceService: InferenceService
     ) { }
 
+    @UseGuards(JwtAuthGuard)
     @Post('frames')
     async handleFrames(@Body() body: { frames: string[] }) {
         const requestId = randomUUID();
