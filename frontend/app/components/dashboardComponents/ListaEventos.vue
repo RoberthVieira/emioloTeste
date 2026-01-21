@@ -80,30 +80,46 @@ onUnmounted(() => {
 
 <style scoped>
 .events {
-  background-color: #f5f5ff;
-  padding: 1rem;
-  border-radius: 8px;
+  background-color: #111;
+  padding: 1.2rem;
+  border-radius: 4px;
+  border: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Para preencher o container pai no Dashboard */
 }
 
 h2 {
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #888;
+  border-left: 3px solid #ffe81f;
+  padding-left: 10px;
 }
 
 ul {
   list-style: none;
   padding: 0;
   margin: 0;
+  overflow-y: auto; /* Scroll interno para os logs */
 }
 
 .event-item {
-  background: #fff;
-  padding: 0.75rem;
-  border-radius: 6px;
+  background: #1a1a1a;
+  padding: 0.85rem;
+  border-radius: 2px;
   margin-bottom: 0.75rem;
+  border-left: 2px solid #444;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  transition: background 0.2s;
+}
+
+.event-item:hover {
+  background: #222;
 }
 
 .event-main {
@@ -114,39 +130,63 @@ ul {
 
 .label {
   font-weight: 600;
+  color: #eee;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
 }
 
 .risk {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   padding: 2px 8px;
-  border-radius: 999px;
-  font-weight: 600;
+  border-radius: 2px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
+/* Cores de Risco Estilo "Alerta de Painel" */
 .low {
-  background: #dcfce7;
-  color: #166534;
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid #4ade80;
 }
 
 .medium {
-  background: #fef9c3;
-  color: #854d0e;
+  background: rgba(234, 179, 8, 0.1);
+  color: #facc15;
+  border: 1px solid #facc15;
 }
 
 .high {
-  background: #fee2e2;
-  color: #991b1b;
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid #f87171;
+  box-shadow: 0 0 5px rgba(239, 68, 68, 0.3);
 }
 
 .event-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
-  color: #555;
+  font-size: 0.75rem;
+  color: #666;
+  font-family: 'Courier New', monospace;
 }
 
 .empty {
-  color: #666;
-  font-size: 0.9rem;
+  color: #444;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 2rem 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Customização da Scrollbar dos Logs */
+ul::-webkit-scrollbar {
+  width: 4px;
+}
+ul::-webkit-scrollbar-thumb {
+  background: #333;
 }
 </style>    

@@ -101,62 +101,94 @@
 .player {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    height: 100%;
 }
 
 .video-wrapper {
     position: relative;
+    border: 2px solid #333;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Linhas de scan estilo radar (efeito visual opcional) */
+.video-wrapper::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
 }
 
 .video-placeholder {
-    background: #111;
-    color: #fff;
+    background: #050505;
+    color: #444;
     height: 240px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
+/* A Bounding Box da IA - Estilo "Target Locked" */
 .bbox {
     position: absolute;
-    border: 2px solid #dc2626;
+    border: 2px solid #00f2ff; /* Azul ciano estilo holograma */
     box-sizing: border-box;
+    box-shadow: 0 0 8px #00f2ff, inset 0 0 8px #00f2ff;
+    z-index: 10;
 }
 
 .badge {
     position: absolute;
-    top: -22px;
-    left: 0;
-    background: #dc2626;
-    color: #fff;
-    font-size: 0.75rem;
-    padding: 2px 6px;
-    border-radius: 4px;
+    top: -25px;
+    left: -2px;
+    background: #00f2ff;
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 2px;
     white-space: nowrap;
+    text-transform: uppercase;
+    font-family: 'Courier New', monospace;
 }
 
 .info {
-    background: #f5f5f5;
+    background: #111;
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 4px;
+    border: 1px solid #222;
 }
 
 .info p {
-    margin: 0.3rem 0;
-    font-size: 0.95rem;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+    color: #aaa;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
 }
 
+/* Status com cores neon */
 .connected {
-    color: #16a34a;
+    color: #4ade80 !important;
+    text-shadow: 0 0 5px rgba(74, 222, 128, 0.5);
 }
 
 .loading {
-    color: #d97706;
+    color: #fbbf24 !important;
 }
 
 .error {
-    color: #dc2626;
+    color: #f87171 !important;
+    text-shadow: 0 0 5px rgba(248, 113, 113, 0.5);
 }
 
 /* Responsivo */
