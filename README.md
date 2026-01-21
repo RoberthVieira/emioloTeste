@@ -120,7 +120,7 @@ Essa arquitetura permite fácil substituição do simulador por uma IA real no f
     - Abrir um novo terminal
     - `cd frontend`
     - `npm install`
-    - `npm run dev` (O site rodará em http://localhost:3001)
+    - `npx nuxi dev --port 3001` (O site rodará em http://localhost:3001)
 ```
 
 ## 7. Uso de Inteligência Artificial como Co-piloto
