@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { MetricsRepository } from './metrics.repository';
 
 @Injectable()
 export class MetricsServices {
+    constructor(
+        private readonly metricsRepository: MetricsRepository
+    ) {}
+
     private processedEvents = 0;
     private errorCount = 0;
     private latencies: number[] = [];
@@ -9,17 +14,29 @@ export class MetricsServices {
     private mediumRiskEvents = 0; 
     private lowRiskEvents = 0;
 
-    recordEvent(latencyMs: number, riskLevel: 'LOW' | 'MEDIUM' | 'HIGH') {
+    async recordEvent(latencyMs: number, riskLevel: 'LOW' | 'MEDIUM' | 'HIGH') {
         this.processedEvents++;
         this.latencies.push(latencyMs);
 
         if (riskLevel === 'HIGH') this.highRiskEvents++;
         else if (riskLevel === 'MEDIUM') this.mediumRiskEvents++;
         else this.lowRiskEvents++;
+
+        await this.metricsRepository.saveMetric({
+            latencyMs,
+            riskLevel,
+            isError: false
+        });
     }
 
-    recordError() {
+    async recordError(latencyMs: number, riskLevel: 'LOW' | 'MEDIUM' | 'HIGH') {
         this.errorCount++;
+
+        await this.metricsRepository.saveMetric({
+          latencyMs,
+          riskLevel,
+          isError: true
+        });
     }
 
     getMetrics() {
