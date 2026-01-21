@@ -1,6 +1,6 @@
 # Backend — Teste Técnico Full Stack (eMiolo.com)
 
-Este é o backend do teste técnico da eMiolo.com, implementado com NestJS e MongoDB.
+Este é o backend do teste técnico da eMiolo.com, implementado com NestJS e MongoDB.  
 Ele simula um sistema de inferência de Inteligência Artificial em tempo real, com integração REST + WebSockets, persistência em banco e observabilidade básica.
 
 ---
@@ -40,7 +40,19 @@ src/
 │   ├── health.controller.ts
 │   ├── metrics.service.ts
 │   └── health.module.ts
-└── ...                          # Outras dependências (config, providers, etc.)
+├── auth/                          # Autenticação
+│   ├── auth.module.ts
+│   ├── auth.service.ts
+│   ├── auth.controller.ts
+│   ├── google.strategy.ts
+│   ├── jwt.strategy.ts
+│   └── jwt-auth.guard.ts
+└── users/                         # Usuários
+    ├── users.module.ts
+    ├── users.service.ts 
+    ├── users.conntroller.ts
+    └── users.schema.ts 
+        
 ```
 
 ---
@@ -132,13 +144,32 @@ GET /health/metrics
 
 ---
 
-## Observabilidade
+## Autenticação
 
-O endpoint /health/metrics foi criado para demonstrar observabilidade simples:
-- total de eventos processados
-- Latência média
-- Taxa de erro
-- Tempo de uptime 
+O backend suporta dois métodos de autenticação:
+
+- **Google OAuth 2.0 (Parte 1)**  
+  - Endpoint `GET /auth/google` redireciona para autenticação com Google.  
+  - Endpoint `GET /auth/google/callback` processa o callback do Google e retorna informações do usuário (`name` e `email`) para o front-end.
+
+- **JWT (JSON Web Token)**  
+  - Protege endpoints privados via `Bearer Token`.  
+  - Implementado com `JwtStrategy` e `JwtAuthGuard`.  
+  - Tokens expiram em 1 hora e podem ser usados para autenticar chamadas de API e WebSocket.
+
+---
+
+## Observabilidade e logs
+
+- Métricas do sistema via endpoint `/health/metrics`:
+  - Eventos processados
+  - Latência média
+  - Taxa de erro
+  - Uptime do servidor
+- Logs estruturados via **Winston**:
+  - Conexões de clientes WebSocket
+  - Início e término de streams de inferência
+  - Erros e eventos importantes para depuração e rastreamento
 
 ---
 

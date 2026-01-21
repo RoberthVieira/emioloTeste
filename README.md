@@ -8,13 +8,13 @@ Este projeto simula um sistema de monitoramento de vídeo com análise de IA em 
 
 Nota importante: Para garantir a entrega do "core" da aplicação no prazo, o sistema utiliza dados de inferência simulados. Isso permite demonstrar a integração técnica e a reatividade da interface sem a complexidade de um modelo de IA real neste estágio. 
 
+Além do módulo de inferência em tempo real, o projeto também contempla a Parte 1 do desafio, incluindo autenticação, autorização, consumo de API externa (SWAPI), navegação dinâmica e listagem de usuários, demonstrando a integração completa entre frontend e backend.
+
 ---
 
 # 2. Escopo Entregue
 
-Foram implementadas as principais partes solicitadas no desafio, com foco no funcionamento do core da aplicação e no entendimento no fluxo principal do projeto.
-
-Funcionalidades opcionais ou mais avançadas foram consideradas apenas após a consolidação da base. Algumas partes do projeto de referencia não foram implementadas integralmente, seja por limitação de tempo, escopo ou por serem essenciais para demostrar o reciocinio tecnico proposto no desafio.
+Foram implementadas as principais partes solicitadas no desafio, com foco no funcionamento do core da aplicação e no entendimento no fluxo principal do projeto
 
 A proposta foi garantir clareza estrutural, organização do codigo e funcionamento consistente do fluxo principal
 
@@ -25,45 +25,62 @@ A proposta foi garantir clareza estrutural, organização do codigo e funcioname
 - **Frameworks:** NestJS, Nuxt 3 (Vue.js)
 - **Banco de Dados:** MongoDB Atlas (via Mongoose)
 - **Comunicação Real-time:** WebSockets (Socket.io)
-- **Autenticação (WebSocket):** WebSockets (Socket.io)
+- **Autenticação e Autorização:** JWT (REST) + validação de token no WebSocket
+- **Observabilidade:** Logs com Winston + persistência de métricas no MongoDB
 - **Versionamento:** Git
 
 ---
 
 ## 4. Fluxo macro da Aplicação
 
-**1 - Inicialização do Frontend**
-- O usuário acessa a interface web
+**1 - Autenticação**
+- O usuário realiza login via Google OAuth2.
+- Após autenticação, o backend emite um token JWT.
+- Apenas usuários autenticados conseguem acessar endpoints protegidos e iniciar inferências.
+
+**2 - Inicialização do Frontend**
+- O usuário acessa a interface autenticada.
+- O frontend consome endpoints REST protegidos para:
+    - Obter dados do usuário
+    - Listar usuários cadastrados
 - O frontend gera um requestId único para a sessão de inferência.
 
-**2 - Conexão em Tempo Real**
+**3 – Consumo de API Externa (SWAPI)**
+- O frontend consome dados da Star Wars API (SWAPI) via HTTP (REST).
+- São utilizados dois endpoints públicos da API, por exemplo:
+    - /people
+    - /planets
+- O usuário pode:
+    - Visualizar listas de entidades (personagens e planetas)
+    - Navegar para telas de detalhe com informações adicionais
+- Esse fluxo é independente da inferência, servindo como demonstração de navegação, organização de rotas e consumo de APIs externas.
+
+**4 - Conexão em Tempo Real**
 - O frontend estabelece conexão com o backend via WebSocket (Socket.io).
-- O estado da conexão é refletido na interface.
+- O token é validado no handshake da conexão.
 
-**3 - Simulação de análise**
-- O sistema inicia uma simulação de análise de vídeo.
-- Não há captura real de câmera: os dados são gerados para representar um cenário de uso real.
+**5 - Simulação de Inferência**
+- O backend inicia uma simulação de análise de vídeo.
+- Não há captura real de câmera; os dados são gerados para representar um cenário realista.
 
-**4 - Envio de resultados**
-- O servidor envia continuamente informações simuladas, como:
-    - Tipos de eventos detectados
-    - Nivel de risco
+**6 - Envio e Persistência de Result resultados**
+- O servidor envia continuamente eventos simulados contendo:
+    - Tipo de evento
+    - Nível de risco
     - Grau de confiança
-    - Area detectada 
+    - Identificação do frame
+- Cada evento é persistido no banco de dados.
 
-**5 - Atualização da interface**
-- A interface reage imediatamente aos dados recebidos:
-    - Mostra alertas visuais sobre o vídeo simulado
-    - Atualiza a lista de eventos recentes
-    - Exibe indicadores de risco e confiança
-
-**6 - Monitoramento e Métricas**
-- O sistema apresenta dados gerais de funcionamento, como:
+**7 - Métricas e Observabilidade**
+- O sistema registra métricas como:
     - Quantidade de eventos processados
-    - Tempo médio de resposta
-- Esses dados ajudam a visualizar a “saúde” da aplicação.
+    - Latência média
+    - Taxa de erro
+    - Distribuição de risco
+- As métricas são persistidas em banco, garantindo histórico mesmo após falhas ou reinício do servidor.
+- Logs estruturados são gerados para rastreamento e depuração.
 
-**7 - Encerramento**
+**8 - Encerramento**
 - Ao sair da página, a conexão é encerrada corretamente.
 - Nenhum dado sensivel é armazenado 
 
@@ -76,7 +93,9 @@ Adotei uma separação clara de responsabilidades para facilitar a manutenção 
 - Comunicação Híbrida: * WebSockets: Para o fluxo constante e pesado de inferências (Real-time).
 - HTTP (REST): Para dados estáticos ou de consulta pontual (Métricas).
 - Backend (NestJS): Estruturado em módulos independentes (inference, events e health). O uso de módulos permite que o motor de IA seja substituído no futuro sem afetar o restante do sistema.
-- Frontend (Nuxt 3): Organizado em componentes reativos especializados (Player, Listagem e Stats).
+- Frontend (Nuxt 3): Navegação baseada em rotas dinâmicas, componentes reutilizáveis, interface reativa a eventos em tempo real
+
+Essa arquitetura permite fácil substituição do simulador por uma IA real no futuro, sem impacto no restante do sistema.
 
 --- 
 
@@ -138,12 +157,11 @@ Por ultimo caso a nova implementação apresente qualquer instabilidade, o siste
 
 ## 9. Limitações e Melhorias Futuras
 
-**Limitação 1:** O OAuth2, listagem de usuários e consumo de API (SWAPI) foi mapeado como melhoria prioritária para uma próxima sprint.
-**Limitação 2:** O player de vídeo e as inferências são simulações visuais para este teste.
 
-- Melhoria 1: Integração com um provedor real de IA (ex: TensorFlow.js ou Azure Cognitive Services).
-- Melhoria 2: Implementação de autenticação completa (OAuth2/Google).
-- Melhoria 3: Adição de testes automatizados (Unitários e E2E) para garantir a resiliência do stream.
+**Limitação:** O player de vídeo e as inferências são simulações visuais para este teste.
+
+- Melhoria 1: Integração com um provedor real de IA (ex: TensorFlow.js ou Azure Cognitive Services)
+- Melhoria 2: Adição de testes automatizados (Unitários e E2E) para garantir a resiliência do stream.
 
 ---
 
