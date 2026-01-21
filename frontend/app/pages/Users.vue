@@ -43,13 +43,27 @@
 
 <style scoped>
     .users-page {
+        height: 100vh;
+        width: 100vw;
         max-width: 800px;
         margin: 0 auto;
         padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        background: #0a0a0a;
+        color: #ffe81f;
+        font-family: 'Segoe UI', sans-serif;
     }
 
     h1 {
-        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #ffe81f;
+        padding-bottom: 0.5rem;
+        text-shadow: 0 0 8px rgba(255, 232, 31, 0.4);
     }
 
     .list {

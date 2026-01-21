@@ -30,14 +30,22 @@
 </template>
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    *{
+        margin: 0;
+        padding: 0;
+    }
+
     .login-page {
-        font-family: sans-serif;
-        min-height: 100vh;
+        font-family: 'Orbitron', sans-serif;
+        height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1rem;
-        background: linear-gradient(135deg, #eef2ff, #f9fafb);
+        background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+        color: #ffe81f; 
+        position: relative;
     }
 
     .login-card {

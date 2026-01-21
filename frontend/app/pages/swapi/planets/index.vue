@@ -50,73 +50,104 @@
 
 <style scoped>
   .page {
+    height: 100vh;
+    width: 100vw;
     max-width: 900px;
     margin: 0 auto;
     padding: 1.5rem;
-  }
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    color: #ffe81f; /* Amarelo Star Wars */
+    font-family: 'Segoe UI', sans-serif;
+}
 
-  .header h1 {
-    font-size: 1.8rem;
+.header h1 {
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
     margin-bottom: 0.25rem;
-  }
+    text-shadow: 0 0 8px rgba(255, 232, 31, 0.4);
+}
 
-  .header p {
-    color: #555;
+.header p {
+    color: #888;
     margin-bottom: 1.5rem;
-  }
+    font-size: 0.9rem;
+}
 
-  .status {
+.status {
     font-size: 0.95rem;
-    color: #555;
-  }
+    color: #ffe81f;
+    text-align: center;
+    margin-top: 2rem;
+}
 
-  .status.error {
-    color: #b91c1c;
-  }
+.status.error {
+    color: #ef4444;
+}
 
-  .list {
+.list {
+    flex: 1;
+    overflow-y: auto;
     list-style: none;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 15px;
+    padding: 0 0.5rem 0 0;
+    margin: 0 0 1.5rem 0;
     display: grid;
     gap: 0.75rem;
-  }
+}
 
-  .card {
-    background: white;
-    padding: 1rem;
+.list::-webkit-scrollbar {
+    width: 5px;
+}
+.list::-webkit-scrollbar-track {
+    background: #111;
+}
+.list::-webkit-scrollbar-thumb {
+    background: #ffe81f;
     border-radius: 10px;
+}
+
+.card {
+    background: #151515;
+    padding: 1rem;
+    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    border: 1px solid #eee;
+    border: 1px solid #333;
     transition: all 0.2s ease;
-  }
+}
 
-  .card:hover {
-    background: #f9fafb;
-    transform: translateY(-2px);
-  }
+.card:hover {
+    border-color: #ffe81f;
+    background: rgba(255, 232, 31, 0.05);
+    transform: translateX(5px);
+}
 
-  .name {
+.name {
     font-weight: 600;
-  }
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 
-  .arrow {
+.arrow {
     font-size: 1.2rem;
-    color: #666;
-  }
+    color: #ffe81f;
+}
 
-  /* Responsivo */
-  @media (max-width: 600px) {
+:deep(.back-btn) {
+    align-self: flex-start;
+}
+
+@media (max-width: 600px) {
     .header h1 {
-      font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 
     .card {
-      padding: 0.85rem;
+        padding: 0.85rem;
     }
-  }
+}
 </style>
